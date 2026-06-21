@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 询单管理顶级菜单 -->
+    <menuitem id="inquiry_menu_root"
+              name="询单管理"
+              web_icon="inquiry_management,static/description/icon.png"
+              sequence="26"/>
+
+    <!-- 一级菜单 -->
+    <menuitem id="inquiry_menu_orders"
+              name="询单"
+              parent="inquiry_menu_root"
+              sequence="10"/>
+
+    <!-- 二级菜单 -->
+    <menuitem id="inquiry_menu_order_list"
+              name="所有询单"
+              parent="inquiry_menu_orders"
+              action="inquiry_order_action"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 预采订单 Tree 视图 -->
+    <record id="purchase_preorder_view_tree" model="ir.ui.view">
+        <field name="name">purchase.preorder.tree</field>
+        <field name="model">purchase.preorder</field>
+        <field name="arch" type="xml">
+            <tree string="预采订单" decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state == 'approved'" decoration-muted="state in ('cancelled',)">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="purchase_mode"/>
+                <field name="partner_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="order_type"/>
+                <field name="expected_date"/>
+                <field name="target_platform"/>
+                <field name="amount_total" sum="合计"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state == 'approved'" decoration-danger="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 预采订单 Form 视图 -->
+    <record id="purchase_preorder_view_form" model="ir.ui.view">
+        <field name="name">purchase.preorder.form</field>
+        <field name="model">purchase.preorder</field>
+        <field name="arch" type="xml">
+            <form string="预采订单">
+                <header>
+                    <button name="action_submit" string="提交" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" string="审批" type="object"
+                            class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_convert_to_purchase" string="转采购单" type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    <button name="action_cancel" string="取消" type="object"
+                            invisible="state in ('converted', 'cancelled')"/>
+                    <button name="action_reset_to_draft" string="重置为草稿" type="object"
+                            invisible="state not in ('submitted', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,converted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_orders" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart"
+                                invisible="purchase_order_count == 0">
+                            <field name="purchase_order_count" widget="statinfo" string="采购单"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="brand_id" readonly="state != 'draft'"/>
+                            <field name="purchase_mode" readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="user_id" readonly="state != 'draft'" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="order_type" readonly="state != 'draft'"/>
+                            <field name="expected_date"
+                                   readonly="state != 'draft'"
+                                   required="order_type == 'futures'"/>
+                            <field name="target_platform"
+                                   readonly="state != 'draft'"
+                                   required="order_type == 'futures'"/>
+                            <field name="payment_terms" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="订单明细" name="order_lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <tree string="订单明细行" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="qty_received"
+                                           readonly="state not in ('approved', 'converted')"/>
+                                    <field name="qty_remaining"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="其他信息" name="other_info">
+                            <group>
+                                <group>
+                                    <field name="submitted_date" readonly="True"/>
+                                    <field name="approved_date" readonly="True"/>
+                                    <field name="approved_by" readonly="True"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="备注" name="notes">
+                            <field name="notes" readonly="state == 'cancelled'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 预采订单 Search 视图 -->
+    <record id="purchase_preorder_view_search" model="ir.ui.view">
+        <field name="name">purchase.preorder.search</field>
+        <field name="model">purchase.preorder</field>
+        <field name="arch" type="xml">
+            <search string="搜索预采订单">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="我的预采订单" name="my_preorders" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="草稿" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="已提交" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="已审批" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="已转采购单" name="converted" domain="[('state', '=', 'converted')]"/>
+                <filter string="已取消" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="现货" name="spot" domain="[('order_type', '=', 'spot')]"/>
+                <filter string="期货" name="futures" domain="[('order_type', '=', 'futures')]"/>
+                <separator/>
+                <filter string="自采" name="self_purchase" domain="[('purchase_mode', '=', 'self_purchase')]"/>
+                <filter string="大贸" name="general_trade" domain="[('purchase_mode', '=', 'general_trade')]"/>
+                <group expand="0" string="分组">
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="采购员" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="状态" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="采购模式" name="group_mode" context="{'group_by': 'purchase_mode'}"/>
+                    <filter string="订单类型" name="group_type" context="{'group_by': 'order_type'}"/>
+                    <filter string="供应商" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 预采订单动作 -->
+    <record id="purchase_preorder_action" model="ir.actions.act_window">
+        <field name="name">预采订单</field>
+        <field name="res_model">purchase.preorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="purchase_preorder_view_search"/>
+        <field name="context">{'search_default_my_preorders': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建第一个预采订单
+            </p>
+            <p>预采订单用于管理拟下单的采购需求，经审批后可转为正式采购单。</p>
+        </field>
+    </record>
+
+</odoo>

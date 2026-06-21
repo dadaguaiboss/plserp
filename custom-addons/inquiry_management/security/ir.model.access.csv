@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_inquiry_order_user,inquiry.order.user,model_inquiry_order,base.group_user,1,1,1,0
+access_inquiry_order_manager,inquiry.order.manager,model_inquiry_order,purchase.group_purchase_manager,1,1,1,1
+access_inquiry_order_line_user,inquiry.order.line.user,model_inquiry_order_line,base.group_user,1,1,1,0
+access_inquiry_order_line_manager,inquiry.order.line.manager,model_inquiry_order_line,purchase.group_purchase_manager,1,1,1,1

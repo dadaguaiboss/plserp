@@ -1,0 +1,23 @@
+[Unit]
+Description=ProLion ERP (普洛狮ERP - Odoo 19)
+Documentation=https://www.odoo.com/documentation/19.0/
+After=network.target
+
+[Service]
+Type=simple
+SyslogIdentifier=prolion-erp
+PermissionsStartOnly=true
+User=prolion
+Group=prolion
+ExecStart=/opt/prolion-erp/venv/bin/python /opt/prolion-erp/server/odoo-bin -c /opt/prolion-erp/prolion-erp.conf
+WorkingDirectory=/opt/prolion-erp/server
+StandardOutput=journal+console
+Restart=on-failure
+RestartSec=5s
+
+# 安全加固
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

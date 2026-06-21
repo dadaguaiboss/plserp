@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== Tree 视图 ==================== -->
+    <record id="oms_order_view_tree" model="ir.ui.view">
+        <field name="name">oms.order.tree</field>
+        <field name="model">oms.order</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'"
+                  decoration-success="state == 'delivered'"
+                  decoration-warning="state == 'after_sale'"
+                  decoration-danger="state == 'cancelled'"
+                  default_order="order_date desc">
+                <field name="name"/>
+                <field name="platform"/>
+                <field name="platform_order_no"/>
+                <field name="shop_name"/>
+                <field name="partner_id"/>
+                <field name="brand_id" optional="show"/>
+                <field name="order_date"/>
+                <field name="amount_total" sum="合计"/>
+                <field name="tracking_number" optional="hide"/>
+                <field name="carrier_id" optional="hide"/>
+                <field name="sale_order_id" optional="hide"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state in ('confirmed', 'delivered')"
+                       decoration-warning="state == 'shipped'"
+                       decoration-danger="state in ('cancelled', 'after_sale')"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ==================== Form 视图 ==================== -->
+    <record id="oms_order_view_form" model="ir.ui.view">
+        <field name="name">oms.order.form</field>
+        <field name="model">oms.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="确认" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_create_sale_order" string="创建销售订单" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_ship" string="发货" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_deliver" string="确认签收" type="object"
+                            invisible="state != 'shipped'"/>
+                    <button name="action_after_sale" string="发起售后" type="object"
+                            invisible="state not in ('shipped', 'delivered')"/>
+                    <button name="action_cancel" string="取消" type="object"
+                            invisible="state in ('delivered', 'cancelled')"/>
+                    <button name="action_reset_to_draft" string="重置为草稿" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,shipped,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(sale.action_quotations_with_onboarding)d"
+                                type="action" class="oe_stat_button" icon="fa-shopping-cart"
+                                invisible="not sale_order_id">
+                            <field name="sale_order_id" widget="statinfo" string="销售订单"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="platform"/>
+                            <field name="platform_order_no"/>
+                            <field name="shop_name"/>
+                            <field name="partner_id"/>
+                            <field name="brand_id"/>
+                            <field name="order_date"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="金额信息">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_total"/>
+                            <field name="shipping_fee"/>
+                            <field name="commission_fee"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="订单明细" name="order_lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="platform_sku"/>
+                                    <field name="product_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="price_subtotal" sum="小计合计"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="收货信息" name="shipping_info">
+                            <group>
+                                <group>
+                                    <field name="shipping_name"/>
+                                    <field name="shipping_phone"/>
+                                </group>
+                                <group>
+                                    <field name="shipping_address"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="物流信息" name="logistics_info">
+                            <group>
+                                <group>
+                                    <field name="carrier_id"/>
+                                    <field name="tracking_number"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="备注" name="notes">
+                            <field name="notes" placeholder="在此输入备注..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== Search 视图 ==================== -->
+    <record id="oms_order_view_search" model="ir.ui.view">
+        <field name="name">oms.order.search</field>
+        <field name="model">oms.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="platform_order_no"/>
+                <field name="shop_name"/>
+                <field name="partner_id"/>
+                <field name="tracking_number"/>
+                <field name="shipping_name"/>
+                <field name="shipping_phone"/>
+                <filter string="草稿" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="已确认" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="已发货" name="filter_shipped" domain="[('state', '=', 'shipped')]"/>
+                <filter string="已签收" name="filter_delivered" domain="[('state', '=', 'delivered')]"/>
+                <filter string="售后中" name="filter_after_sale" domain="[('state', '=', 'after_sale')]"/>
+                <filter string="已取消" name="filter_cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="我的订单" name="filter_my" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <group expand="0" string="分组">
+                    <filter string="平台" name="group_platform" context="{'group_by': 'platform'}"/>
+                    <filter string="店铺" name="group_shop" context="{'group_by': 'shop_name'}"/>
+                    <filter string="状态" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="下单日期" name="group_order_date" context="{'group_by': 'order_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== Kanban 视图 ==================== -->
+    <record id="oms_order_view_kanban" model="ir.ui.view">
+        <field name="name">oms.order.kanban</field>
+        <field name="model">oms.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="platform"/>
+                <field name="platform_order_no"/>
+                <field name="partner_id"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <field name="user_id"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb4">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="state" widget="label_selection"
+                                       options="{'classes': {'draft': 'info', 'confirmed': 'success', 'shipped': 'warning', 'delivered': 'success', 'cancelled': 'danger', 'after_sale': 'warning'}}"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div><strong>平台:</strong> <field name="platform"/></div>
+                                <div><strong>平台单号:</strong> <field name="platform_order_no"/></div>
+                                <div><strong>客户:</strong> <field name="partner_id"/></div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="amount_total" widget="monetary"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== Action ==================== -->
+    <record id="oms_order_action" model="ir.actions.act_window">
+        <field name="name">平台订单</field>
+        <field name="res_model">oms.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="oms_order_view_search"/>
+        <field name="context">{'search_default_filter_my': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建第一个平台订单
+            </p>
+            <p>
+                在此管理来自天猫、京东、抖音、拼多多、Amazon等多平台的订单。
+            </p>
+        </field>
+    </record>
+
+</odoo>

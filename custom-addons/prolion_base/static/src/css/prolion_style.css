@@ -1,0 +1,65 @@
+/*
+ * 普洛狮ERP 品牌定制样式 - 后端
+ */
+
+/* 主题色变量 */
+:root {
+    --prolion-primary: #714B67;
+    --prolion-primary-light: #8F6B85;
+    --prolion-primary-dark: #5A3C52;
+    --prolion-accent: #00A09D;
+    --prolion-bg-light: #F8F9FA;
+}
+
+/* 侧边栏品牌色 */
+.o_main_navbar {
+    background-color: var(--prolion-primary) !important;
+}
+
+.o_main_navbar .o_menu_brand {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* 按钮主色调 */
+.btn-primary {
+    background-color: var(--prolion-primary) !important;
+    border-color: var(--prolion-primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--prolion-primary-dark) !important;
+    border-color: var(--prolion-primary-dark) !important;
+}
+
+/* 链接颜色 */
+a.text-primary,
+.text-primary {
+    color: var(--prolion-primary) !important;
+}
+
+/* 选中状态颜色 */
+.o_list_view .o_data_row.o_data_row_selected {
+    background-color: rgba(113, 75, 103, 0.08);
+}
+
+/* 看板卡片顶部色条 */
+.o_kanban_record .oe_kanban_color_0 {
+    border-left-color: var(--prolion-primary);
+}
+
+/* 底部品牌标识 */
+.o_brand_promotion {
+    font-size: 12px;
+    color: #888;
+}
+
+.o_brand_promotion_link {
+    color: #888 !important;
+    text-decoration: none !important;
+}
+
+.o_brand_promotion_link:hover {
+    color: var(--prolion-primary) !important;
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_prolion_cn" model="ir.ui.view">
+        <field name="name">res.partner.form.prolion.cn</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="unified_social_credit_code"/>
+                <field name="invoice_title"/>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page string="中国开票信息" name="cn_invoice_info"
+                      invisible="not is_company">
+                    <group>
+                        <group string="开票信息">
+                            <field name="invoice_title"/>
+                            <field name="unified_social_credit_code"/>
+                            <field name="bank_name"/>
+                            <field name="bank_account"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

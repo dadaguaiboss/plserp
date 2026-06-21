@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 行情监测 主菜单 -->
+    <menuitem id="menu_price_monitor_root"
+              name="行情监测"
+              sequence="60"
+              web_icon="price_monitor,static/description/icon.png"/>
+
+    <!-- 监控管理 -->
+    <menuitem id="menu_price_monitor_manage"
+              name="监控管理"
+              parent="menu_price_monitor_root"
+              sequence="10"/>
+
+    <menuitem id="menu_price_monitor_product"
+              name="监控商品"
+              parent="menu_price_monitor_manage"
+              action="action_price_monitor_product"
+              sequence="10"/>
+
+    <menuitem id="menu_price_monitor_record"
+              name="价格记录"
+              parent="menu_price_monitor_manage"
+              action="action_price_monitor_record"
+              sequence="20"/>
+
+    <!-- 预警中心 -->
+    <menuitem id="menu_price_alert"
+              name="预警中心"
+              parent="menu_price_monitor_root"
+              action="action_price_alert"
+              sequence="20"/>
+
+</odoo>

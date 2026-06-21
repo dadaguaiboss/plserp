@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 价格记录 Tree 视图 -->
+    <record id="price_monitor_record_tree" model="ir.ui.view">
+        <field name="name">price.monitor.record.tree</field>
+        <field name="model">price.monitor.record</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="monitor_product_id"/>
+                <field name="check_date"/>
+                <field name="competitor_price"/>
+                <field name="our_price"/>
+                <field name="price_diff"/>
+                <field name="price_diff_rate"/>
+                <field name="alert_type"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 价格记录 Graph 视图 -->
+    <record id="price_monitor_record_graph" model="ir.ui.view">
+        <field name="name">price.monitor.record.graph</field>
+        <field name="model">price.monitor.record</field>
+        <field name="arch" type="xml">
+            <graph string="价格趋势" type="line">
+                <field name="check_date" type="row"/>
+                <field name="competitor_price" type="measure"/>
+                <field name="our_price" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 价格记录 Search 视图 -->
+    <record id="price_monitor_record_search" model="ir.ui.view">
+        <field name="name">price.monitor.record.search</field>
+        <field name="model">price.monitor.record</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="monitor_product_id"/>
+                <field name="check_date"/>
+                <filter string="竞品降价" name="filter_drop" domain="[('alert_type', '=', 'competitor_drop')]"/>
+                <filter string="竞品涨价" name="filter_rise" domain="[('alert_type', '=', 'competitor_rise')]"/>
+                <filter string="价格机会" name="filter_opportunity" domain="[('alert_type', '=', 'opportunity')]"/>
+                <separator/>
+                <filter string="本月" name="filter_this_month" domain="[('check_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="分组">
+                    <filter string="监控商品" name="group_product" context="{'group_by': 'monitor_product_id'}"/>
+                    <filter string="检查日期" name="group_date" context="{'group_by': 'check_date:month'}"/>
+                    <filter string="预警类型" name="group_alert" context="{'group_by': 'alert_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 价格记录 Action -->
+    <record id="action_price_monitor_record" model="ir.actions.act_window">
+        <field name="name">价格记录</field>
+        <field name="res_model">price.monitor.record</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="price_monitor_record_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                暂无价格记录
+            </p>
+            <p>价格记录将在监控运行后自动生成。</p>
+        </field>
+    </record>
+
+</odoo>

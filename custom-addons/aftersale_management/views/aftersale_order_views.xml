@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 售后单 Tree 视图 -->
+    <record id="aftersale_order_view_tree" model="ir.ui.view">
+        <field name="name">aftersale.order.tree</field>
+        <field name="model">aftersale.order</field>
+        <field name="arch" type="xml">
+            <tree string="售后单列表"
+                  decoration-danger="state == 'rejected'"
+                  decoration-success="state in ('auto_approved', 'approved', 'completed')"
+                  decoration-warning="state == 'manual_review'">
+                <field name="name"/>
+                <field name="platform"/>
+                <field name="platform_order_no"/>
+                <field name="partner_id"/>
+                <field name="aftersale_type"/>
+                <field name="reason_category"/>
+                <field name="amount_total"/>
+                <field name="refund_amount"/>
+                <field name="review_mode"/>
+                <field name="warehouse_verified"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state in ('pending_review', 'manual_review')"
+                       decoration-success="state in ('auto_approved', 'approved', 'completed')"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 售后单 Form 视图 -->
+    <record id="aftersale_order_view_form" model="ir.ui.view">
+        <field name="name">aftersale.order.form</field>
+        <field name="model">aftersale.order</field>
+        <field name="arch" type="xml">
+            <form string="售后单">
+                <header>
+                    <button name="action_submit" type="object"
+                            string="提交审核" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object"
+                            string="审核通过" class="oe_highlight"
+                            invisible="state not in ('auto_approved', 'manual_review')"/>
+                    <button name="action_reject" type="object"
+                            string="拒绝"
+                            invisible="state not in ('auto_approved', 'manual_review')"/>
+                    <button name="action_complete" type="object"
+                            string="完成" class="oe_highlight"
+                            invisible="state != 'approved'"/>
+                    <button name="action_warehouse_verify" type="object"
+                            string="仓库核验"
+                            invisible="state not in ('auto_approved', 'approved') or warehouse_verified == True"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending_review,approved,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="sale_order_id"/>
+                            <field name="platform"/>
+                            <field name="platform_order_no"/>
+                            <field name="partner_id"/>
+                            <field name="brand_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="售后信息">
+                            <field name="aftersale_type"/>
+                            <field name="reason_category"/>
+                            <field name="has_images"/>
+                            <field name="amount_total"/>
+                            <field name="refund_amount"/>
+                            <field name="tracking_number_return"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason_detail" placeholder="请填写详细原因..."/>
+                    </group>
+                    <notebook>
+                        <page string="售后明细" name="lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="审核信息" name="review"
+                              invisible="state == 'draft'">
+                            <group>
+                                <group>
+                                    <field name="review_mode"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="review_date"/>
+                                </group>
+                                <group>
+                                    <field name="review_result"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="仓库核验" name="warehouse">
+                            <group>
+                                <group>
+                                    <field name="warehouse_verified"/>
+                                    <field name="warehouse_verify_date"/>
+                                </group>
+                                <group>
+                                    <field name="warehouse_notes"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 售后单 Search 视图 -->
+    <record id="aftersale_order_view_search" model="ir.ui.view">
+        <field name="name">aftersale.order.search</field>
+        <field name="model">aftersale.order</field>
+        <field name="arch" type="xml">
+            <search string="搜索售后单">
+                <field name="name"/>
+                <field name="platform_order_no"/>
+                <field name="partner_id"/>
+                <field name="sale_order_id"/>
+                <field name="tracking_number_return"/>
+                <filter string="草稿" name="filter_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="待审核" name="filter_pending"
+                        domain="[('state', '=', 'pending_review')]"/>
+                <filter string="自动审核通过" name="filter_auto_approved"
+                        domain="[('state', '=', 'auto_approved')]"/>
+                <filter string="人工复核" name="filter_manual_review"
+                        domain="[('state', '=', 'manual_review')]"/>
+                <filter string="已批准" name="filter_approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter string="已拒绝" name="filter_rejected"
+                        domain="[('state', '=', 'rejected')]"/>
+                <filter string="已完成" name="filter_completed"
+                        domain="[('state', '=', 'completed')]"/>
+                <separator/>
+                <filter string="仓库未核验" name="filter_not_verified"
+                        domain="[('warehouse_verified', '=', False)]"/>
+                <separator/>
+                <group expand="0" string="分组">
+                    <filter string="平台" name="group_platform"
+                            context="{'group_by': 'platform'}"/>
+                    <filter string="售后类型" name="group_type"
+                            context="{'group_by': 'aftersale_type'}"/>
+                    <filter string="原因类别" name="group_reason"
+                            context="{'group_by': 'reason_category'}"/>
+                    <filter string="状态" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="审核方式" name="group_review_mode"
+                            context="{'group_by': 'review_mode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 售后单 Kanban 视图 -->
+    <record id="aftersale_order_view_kanban" model="ir.ui.view">
+        <field name="name">aftersale.order.kanban</field>
+        <field name="model">aftersale.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="platform"/>
+                <field name="aftersale_type"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <field name="review_mode"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="state" widget="label_selection"
+                                       options="{'classes': {
+                                           'draft': 'info',
+                                           'pending_review': 'warning',
+                                           'auto_approved': 'success',
+                                           'manual_review': 'warning',
+                                           'approved': 'success',
+                                           'rejected': 'danger',
+                                           'completed': 'primary'
+                                       }}"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="partner_id"/>
+                                <br/>
+                                <span>平台: <field name="platform"/></span>
+                                <br/>
+                                <span>类型: <field name="aftersale_type"/></span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <span>金额: <field name="amount_total"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 售后单 Action -->
+    <record id="aftersale_order_action" model="ir.actions.act_window">
+        <field name="name">售后单</field>
+        <field name="res_model">aftersale.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="aftersale_order_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建第一个售后单
+            </p>
+            <p>
+                管理退货、换货、退款、补发等售后流程。
+            </p>
+        </field>
+    </record>
+
+</odoo>

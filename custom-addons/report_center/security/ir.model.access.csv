@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_report_stock_summary_user,report.stock.summary.user,model_report_stock_summary,base.group_user,1,0,0,0
+access_report_stock_summary_manager,report.stock.summary.manager,model_report_stock_summary,base.group_system,1,1,1,1
+access_report_profit_analysis_user,report.profit.analysis.user,model_report_profit_analysis,base.group_user,1,0,0,0
+access_report_profit_analysis_manager,report.profit.analysis.manager,model_report_profit_analysis,base.group_system,1,1,1,1

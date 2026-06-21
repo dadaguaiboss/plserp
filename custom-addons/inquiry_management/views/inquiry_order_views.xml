@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== Tree 视图 ==================== -->
+    <record id="inquiry_order_view_tree" model="ir.ui.view">
+        <field name="name">inquiry.order.tree</field>
+        <field name="model">inquiry.order</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'"
+                  decoration-warning="state == 'analyzing'"
+                  decoration-success="state in ('decided', 'converted')"
+                  decoration-muted="state == 'archived'"
+                  default_order="inquiry_date desc">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="brand_id" optional="show"/>
+                <field name="order_type"/>
+                <field name="inquiry_date"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="total_cost" sum="总成本合计"/>
+                <field name="total_profit" sum="总毛利合计"
+                       decoration-success="total_profit > 0"
+                       decoration-danger="total_profit &lt;= 0"/>
+                <field name="avg_margin_rate" string="平均毛利率 (%)"
+                       decoration-success="avg_margin_rate > 0"
+                       decoration-danger="avg_margin_rate &lt;= 0"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'analyzing'"
+                       decoration-success="state in ('decided', 'converted')"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ==================== Form 视图 ==================== -->
+    <record id="inquiry_order_view_form" model="ir.ui.view">
+        <field name="name">inquiry.order.form</field>
+        <field name="model">inquiry.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_analyze" string="开始分析" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_decide" string="确认决策" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'analyzing'"/>
+                    <button name="action_convert_to_preorder" string="转预采订单" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'decided'"/>
+                    <button name="action_archive_record" string="归档" type="object"
+                            invisible="state in ('archived', 'converted')"/>
+                    <button name="action_reset_to_draft" string="重置为草稿" type="object"
+                            invisible="state not in ('analyzing', 'archived')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,analyzing,decided,converted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="partner_id"/>
+                            <field name="brand_id"/>
+                            <field name="order_type"/>
+                            <field name="inquiry_date"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="汇总">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total_cost"/>
+                            <field name="total_profit"
+                                   decoration-success="total_profit > 0"
+                                   decoration-danger="total_profit &lt;= 0"/>
+                            <field name="avg_margin_rate"
+                                   decoration-success="avg_margin_rate > 0"
+                                   decoration-danger="avg_margin_rate &lt;= 0"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="询单明细" name="inquiry_lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="supplier_price"/>
+                                    <field name="last_purchase_price"/>
+                                    <field name="price_change_rate"
+                                           decoration-success="price_change_rate &lt; 0"
+                                           decoration-danger="price_change_rate > 0"/>
+                                    <field name="suggested_sale_price"/>
+                                    <field name="logistics_cost"/>
+                                    <field name="platform_commission_rate"/>
+                                    <field name="platform_commission"/>
+                                    <field name="packaging_cost"/>
+                                    <field name="other_cost" optional="hide"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="total_cost" sum="总成本"/>
+                                    <field name="profit" sum="毛利合计"
+                                           decoration-success="profit > 0"
+                                           decoration-danger="profit &lt;= 0"/>
+                                    <field name="margin_rate"
+                                           decoration-success="margin_rate > 0"
+                                           decoration-danger="margin_rate &lt;= 0"/>
+                                    <field name="is_profitable" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="备注" name="notes">
+                            <field name="notes" placeholder="在此输入备注..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== Search 视图 ==================== -->
+    <record id="inquiry_order_view_search" model="ir.ui.view">
+        <field name="name">inquiry.order.search</field>
+        <field name="model">inquiry.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="brand_id"/>
+                <filter string="草稿" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="分析中" name="filter_analyzing" domain="[('state', '=', 'analyzing')]"/>
+                <filter string="已决策" name="filter_decided" domain="[('state', '=', 'decided')]"/>
+                <filter string="已转单" name="filter_converted" domain="[('state', '=', 'converted')]"/>
+                <filter string="已归档" name="filter_archived" domain="[('state', '=', 'archived')]"/>
+                <separator/>
+                <filter string="现货" name="filter_spot" domain="[('order_type', '=', 'spot')]"/>
+                <filter string="期货" name="filter_futures" domain="[('order_type', '=', 'futures')]"/>
+                <separator/>
+                <filter string="我的询单" name="filter_my" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <group expand="0" string="分组">
+                    <filter string="供应商" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="类型" name="group_type" context="{'group_by': 'order_type'}"/>
+                    <filter string="状态" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="询单日期" name="group_date" context="{'group_by': 'inquiry_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== Action ==================== -->
+    <record id="inquiry_order_action" model="ir.actions.act_window">
+        <field name="name">询单</field>
+        <field name="res_model">inquiry.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="inquiry_order_view_search"/>
+        <field name="context">{'search_default_filter_my': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建第一个询单
+            </p>
+            <p>
+                在此管理供应商报价询单，进行价格对比和利润测算。
+            </p>
+        </field>
+    </record>
+
+</odoo>

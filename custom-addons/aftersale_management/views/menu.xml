@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 售后管理 主菜单 -->
+    <menuitem id="aftersale_menu_root"
+              name="售后管理"
+              web_icon="aftersale_management,static/description/icon.png"
+              sequence="60"/>
+
+    <!-- 售后单 菜单 -->
+    <menuitem id="aftersale_menu_orders"
+              name="售后单"
+              parent="aftersale_menu_root"
+              sequence="10"/>
+
+    <menuitem id="aftersale_menu_order_all"
+              name="所有售后单"
+              parent="aftersale_menu_orders"
+              action="aftersale_order_action"
+              sequence="10"/>
+
+    <!-- 配置 菜单 -->
+    <menuitem id="aftersale_menu_config"
+              name="配置"
+              parent="aftersale_menu_root"
+              sequence="90"/>
+
+    <menuitem id="aftersale_menu_rules"
+              name="审核规则"
+              parent="aftersale_menu_config"
+              action="aftersale_rule_action"
+              sequence="10"/>
+
+</odoo>

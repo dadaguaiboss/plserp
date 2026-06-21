@@ -1,0 +1,115 @@
+# ============================================
+# docker-compose.production.yml - 普洛狮ERP
+# 生产环境部署（含备份服务）
+# ============================================
+version: '3.8'
+
+services:
+  # === 普洛狮ERP 主服务 ===
+  prolion-erp:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: prolion-erp
+    restart: unless-stopped
+    ports:
+      - "31011:31011"
+      - "31012:31012"
+    volumes:
+      - prolion-data:/opt/prolion-erp/data
+      - prolion-logs:/opt/prolion-erp/logs
+      - ../custom-addons:/opt/prolion-erp/custom-addons
+      - ./prolion-erp.conf:/opt/prolion-erp/prolion-erp.conf:ro
+    environment:
+      - LANG=C.UTF-8
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    networks:
+      - prolion-net
+
+  # === 本地 PostgreSQL 备用方案 ===
+  # 取消下方注释即可启用本地数据库
+  # prolion-db:
+  #   image: postgres:16-alpine
+  #   container_name: prolion-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: prolion
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #     POSTGRES_DB: prolion_erp
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #   volumes:
+  #     - prolion-pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - "31016:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U prolion -d prolion_erp"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - prolion-net
+
+  # === Nginx 反向代理 ===
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: prolion-nginx
+    restart: unless-stopped
+    ports:
+      - "31013:80"
+      - "31014:443"
+    volumes:
+      - ./nginx/prolion-erp.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - prolion-erp
+    networks:
+      - prolion-net
+
+  # === 自动备份服务（每24小时备份一次）===
+  backup:
+    image: postgres:16-alpine
+    container_name: prolion-backup
+    restart: unless-stopped
+    environment:
+      PGHOST: 58.250.155.28
+      PGPORT: "31002"
+      PGUSER: prolion
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - prolion-backups:/backups
+    entrypoint: >
+      sh -c '
+        echo "[ProLion ERP] 自动备份服务已启动";
+        while true; do
+          echo "[$(date)] 开始数据库备份...";
+          pg_dump prolion_erp | gzip > /backups/prolion_erp_$$(date +%Y%m%d_%H%M%S).sql.gz;
+          if [ $$? -eq 0 ]; then
+            echo "[$(date)] 备份成功";
+          else
+            echo "[$(date)] 备份失败！";
+          fi;
+          find /backups -name "*.sql.gz" -mtime +30 -delete;
+          echo "[$(date)] 已清理30天前的旧备份，下次备份将在24小时后";
+          sleep 86400;
+        done
+      '
+    networks:
+      - prolion-net
+
+volumes:
+  prolion-data:
+    driver: local
+  prolion-logs:
+    driver: local
+  prolion-backups:
+    driver: local
+  # prolion-pgdata:
+
+networks:
+  prolion-net:
+    driver: bridge

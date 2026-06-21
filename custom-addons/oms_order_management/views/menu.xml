@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- OMS 顶级菜单 -->
+    <menuitem id="oms_menu_root"
+              name="OMS订单管理"
+              web_icon="oms_order_management,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- 一级菜单 -->
+    <menuitem id="oms_menu_orders"
+              name="平台订单"
+              parent="oms_menu_root"
+              sequence="10"/>
+
+    <!-- 二级菜单 -->
+    <menuitem id="oms_menu_order_list"
+              name="所有订单"
+              parent="oms_menu_orders"
+              action="oms_order_action"
+              sequence="10"/>
+
+</odoo>

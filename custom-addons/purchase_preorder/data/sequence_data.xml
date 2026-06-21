@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_purchase_preorder" model="ir.sequence">
+            <field name="name">预采订单序列</field>
+            <field name="code">purchase.preorder</field>
+            <field name="prefix">PPO/%(year)s%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 品牌 Tree 视图 -->
+    <record id="product_brand_view_tree" model="ir.ui.view">
+        <field name="name">product.brand.tree</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <tree string="产品品牌">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="active" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 品牌 Form 视图 -->
+    <record id="product_brand_view_form" model="ir.ui.view">
+        <field name="name">product.brand.form</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <form string="产品品牌">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="品牌名称"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 品牌动作 -->
+    <record id="product_brand_action" model="ir.actions.act_window">
+        <field name="name">产品品牌</field>
+        <field name="res_model">product.brand</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建第一个产品品牌
+            </p>
+            <p>品牌用于对产品进行分类管理。</p>
+        </field>
+    </record>
+
+</odoo>

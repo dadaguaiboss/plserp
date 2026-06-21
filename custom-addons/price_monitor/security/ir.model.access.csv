@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_price_monitor_product_user,price.monitor.product.user,model_price_monitor_product,base.group_user,1,1,1,0
+access_price_monitor_product_manager,price.monitor.product.manager,model_price_monitor_product,base.group_system,1,1,1,1
+access_price_monitor_record_user,price.monitor.record.user,model_price_monitor_record,base.group_user,1,1,1,0
+access_price_monitor_record_manager,price.monitor.record.manager,model_price_monitor_record,base.group_system,1,1,1,1
+access_price_alert_user,price.alert.user,model_price_alert,base.group_user,1,1,1,0
+access_price_alert_manager,price.alert.manager,model_price_alert,base.group_system,1,1,1,1

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 设置默认语言为中文 -->
+        <record id="prolion_cn_lang" model="ir.config_parameter">
+            <field name="key">prolion.default_language</field>
+            <field name="value">zh_CN</field>
+        </record>
+
+    </data>
+</odoo>

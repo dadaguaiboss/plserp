@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 系统参数：数据库过滤器 -->
+        <record id="prolion_db_filter" model="ir.config_parameter">
+            <field name="key">web.base.url</field>
+            <field name="value">http://localhost:31013</field>
+        </record>
+
+        <!-- 系统参数：系统名称 -->
+        <record id="prolion_system_name" model="ir.config_parameter">
+            <field name="key">web.base.url.freeze</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- 默认公司信息模板（安装后需手动修改） -->
+        <function model="res.company" name="write">
+            <value eval="[ref('base.main_company')]"/>
+            <value eval="{'name': '普洛狮科技有限公司'}"/>
+        </function>
+
+    </data>
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 审核规则 Tree 视图 -->
+    <record id="aftersale_rule_view_tree" model="ir.ui.view">
+        <field name="name">aftersale.rule.tree</field>
+        <field name="model">aftersale.rule</field>
+        <field name="arch" type="xml">
+            <tree string="审核规则">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="condition_type"/>
+                <field name="result"/>
+                <field name="threshold_amount"/>
+                <field name="threshold_days"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 审核规则 Form 视图 -->
+    <record id="aftersale_rule_view_form" model="ir.ui.view">
+        <field name="name">aftersale.rule.form</field>
+        <field name="model">aftersale.rule</field>
+        <field name="arch" type="xml">
+            <form string="审核规则">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="condition_type"/>
+                            <field name="result"/>
+                        </group>
+                    </group>
+                    <group string="阈值设置">
+                        <group>
+                            <field name="threshold_amount"
+                                   invisible="condition_type != 'high_value'"/>
+                            <field name="threshold_days"
+                                   invisible="condition_type not in ('no_reason_7day', 'over_30days')"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 审核规则 Action -->
+    <record id="aftersale_rule_action" model="ir.actions.act_window">
+        <field name="name">审核规则</field>
+        <field name="res_model">aftersale.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                创建售后自动审核规则
+            </p>
+            <p>
+                配置自动审核条件，系统将按顺序匹配规则并自动处理售后申请。
+            </p>
+        </field>
+    </record>
+
+</odoo>

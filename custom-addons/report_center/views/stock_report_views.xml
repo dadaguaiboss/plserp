@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 库存报表 Tree 视图 -->
+    <record id="report_stock_summary_tree" model="ir.ui.view">
+        <field name="name">report.stock.summary.tree</field>
+        <field name="model">report.stock.summary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="brand_id"/>
+                <field name="qty_on_hand"/>
+                <field name="qty_in_transit"/>
+                <field name="qty_in_channel"/>
+                <field name="qty_reserved"/>
+                <field name="qty_available"/>
+                <field name="stock_value" sum="库存总金额"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 库存报表 Pivot 视图 -->
+    <record id="report_stock_summary_pivot" model="ir.ui.view">
+        <field name="name">report.stock.summary.pivot</field>
+        <field name="model">report.stock.summary</field>
+        <field name="arch" type="xml">
+            <pivot string="库存分析">
+                <field name="warehouse_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="qty_on_hand" type="measure"/>
+                <field name="qty_available" type="measure"/>
+                <field name="stock_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- 库存报表 Graph 视图 -->
+    <record id="report_stock_summary_graph" model="ir.ui.view">
+        <field name="name">report.stock.summary.graph</field>
+        <field name="model">report.stock.summary</field>
+        <field name="arch" type="xml">
+            <graph string="库存分析" type="bar">
+                <field name="warehouse_id" type="row"/>
+                <field name="qty_on_hand" type="measure"/>
+                <field name="stock_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 库存报表 Search 视图 -->
+    <record id="report_stock_summary_search" model="ir.ui.view">
+        <field name="name">report.stock.summary.search</field>
+        <field name="model">report.stock.summary</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="brand_id"/>
+                <filter string="有库存" name="filter_has_stock" domain="[('qty_on_hand', '>', 0)]"/>
+                <filter string="库存不足" name="filter_low_stock" domain="[('qty_available', '&lt;=', 0)]"/>
+                <group expand="0" string="分组">
+                    <filter string="仓库" name="group_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 库存报表 Action -->
+    <record id="action_report_stock_summary" model="ir.actions.act_window">
+        <field name="name">库存总览</field>
+        <field name="res_model">report.stock.summary</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="search_view_id" ref="report_stock_summary_search"/>
+        <field name="context">{'search_default_filter_has_stock': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                暂无库存数据
+            </p>
+        </field>
+    </record>
+
+</odoo>

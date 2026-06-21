@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 无头件管理 主菜单 -->
+    <menuitem id="headless_menu_root"
+              name="无头件管理"
+              web_icon="headless_package,static/description/icon.png"
+              sequence="65"/>
+
+    <!-- 无头件 菜单 -->
+    <menuitem id="headless_menu_packages"
+              name="无头件"
+              parent="headless_menu_root"
+              sequence="10"/>
+
+    <menuitem id="headless_menu_package_all"
+              name="所有无头件"
+              parent="headless_menu_packages"
+              action="headless_package_action"
+              sequence="10"/>
+
+    <menuitem id="headless_menu_import"
+              name="批量导入"
+              parent="headless_menu_packages"
+              action="headless_import_wizard_action"
+              sequence="20"/>
+
+</odoo>

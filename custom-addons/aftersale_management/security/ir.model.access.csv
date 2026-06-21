@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aftersale_order_user,aftersale.order.user,model_aftersale_order,base.group_user,1,1,1,0
+access_aftersale_order_manager,aftersale.order.manager,model_aftersale_order,sales_team.group_sale_manager,1,1,1,1
+access_aftersale_order_line_user,aftersale.order.line.user,model_aftersale_order_line,base.group_user,1,1,1,0
+access_aftersale_order_line_manager,aftersale.order.line.manager,model_aftersale_order_line,sales_team.group_sale_manager,1,1,1,1
+access_aftersale_rule_user,aftersale.rule.user,model_aftersale_rule,base.group_user,1,0,0,0
+access_aftersale_rule_manager,aftersale.rule.manager,model_aftersale_rule,sales_team.group_sale_manager,1,1,1,1

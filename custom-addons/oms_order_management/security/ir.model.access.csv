@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_oms_order_user,oms.order.user,model_oms_order,base.group_user,1,1,1,0
+access_oms_order_manager,oms.order.manager,model_oms_order,sales_team.group_sale_manager,1,1,1,1
+access_oms_order_line_user,oms.order.line.user,model_oms_order_line,base.group_user,1,1,1,0
+access_oms_order_line_manager,oms.order.line.manager,model_oms_order_line,sales_team.group_sale_manager,1,1,1,1

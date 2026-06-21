@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 监控商品 Tree 视图 -->
+    <record id="price_monitor_product_tree" model="ir.ui.view">
+        <field name="name">price.monitor.product.tree</field>
+        <field name="model">price.monitor.product</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name="platform"/>
+                <field name="competitor_name"/>
+                <field name="our_price"/>
+                <field name="monitor_frequency"/>
+                <field name="last_check_date"/>
+                <field name="active" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 监控商品 Form 视图 -->
+    <record id="price_monitor_product_form" model="ir.ui.view">
+        <field name="name">price.monitor.product.form</field>
+        <field name="model">price.monitor.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="已归档" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="platform"/>
+                            <field name="competitor_name"/>
+                            <field name="competitor_url" widget="url"/>
+                        </group>
+                        <group>
+                            <field name="our_price"/>
+                            <field name="monitor_frequency"/>
+                            <field name="last_check_date"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="价格记录" name="records">
+                            <field name="record_ids">
+                                <tree editable="bottom">
+                                    <field name="check_date"/>
+                                    <field name="competitor_price"/>
+                                    <field name="our_price"/>
+                                    <field name="price_diff"/>
+                                    <field name="price_diff_rate"/>
+                                    <field name="alert_type"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 监控商品 Search 视图 -->
+    <record id="price_monitor_product_search" model="ir.ui.view">
+        <field name="name">price.monitor.product.search</field>
+        <field name="model">price.monitor.product</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="competitor_name"/>
+                <field name="platform"/>
+                <filter string="淘宝" name="filter_taobao" domain="[('platform', '=', 'taobao')]"/>
+                <filter string="京东" name="filter_jd" domain="[('platform', '=', 'jd')]"/>
+                <filter string="拼多多" name="filter_pdd" domain="[('platform', '=', 'pdd')]"/>
+                <filter string="亚马逊" name="filter_amazon" domain="[('platform', '=', 'amazon')]"/>
+                <separator/>
+                <filter string="已归档" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="分组">
+                    <filter string="平台" name="group_platform" context="{'group_by': 'platform'}"/>
+                    <filter string="监控频率" name="group_frequency" context="{'group_by': 'monitor_frequency'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 监控商品 Action -->
+    <record id="action_price_monitor_product" model="ir.actions.act_window">
+        <field name="name">监控商品</field>
+        <field name="res_model">price.monitor.product</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="price_monitor_product_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                添加第一个监控商品
+            </p>
+            <p>设置竞品商品进行价格监控和预警。</p>
+        </field>
+    </record>
+
+</odoo>

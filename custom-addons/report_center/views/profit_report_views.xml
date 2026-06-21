@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 利润报表 Tree 视图 -->
+    <record id="report_profit_analysis_tree" model="ir.ui.view">
+        <field name="name">report.profit.analysis.tree</field>
+        <field name="model">report.profit.analysis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="period"/>
+                <field name="product_id"/>
+                <field name="brand_id"/>
+                <field name="platform"/>
+                <field name="revenue" sum="总收入"/>
+                <field name="cost" sum="总成本"/>
+                <field name="gross_profit" sum="总毛利"/>
+                <field name="margin_rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 利润报表 Pivot 视图 -->
+    <record id="report_profit_analysis_pivot" model="ir.ui.view">
+        <field name="name">report.profit.analysis.pivot</field>
+        <field name="model">report.profit.analysis</field>
+        <field name="arch" type="xml">
+            <pivot string="利润分析">
+                <field name="period" type="row" interval="month"/>
+                <field name="product_id" type="row"/>
+                <field name="revenue" type="measure"/>
+                <field name="cost" type="measure"/>
+                <field name="gross_profit" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- 利润报表 Graph 视图 -->
+    <record id="report_profit_analysis_graph" model="ir.ui.view">
+        <field name="name">report.profit.analysis.graph</field>
+        <field name="model">report.profit.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="利润趋势" type="line">
+                <field name="period" type="row"/>
+                <field name="revenue" type="measure"/>
+                <field name="gross_profit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- 利润报表 Search 视图 -->
+    <record id="report_profit_analysis_search" model="ir.ui.view">
+        <field name="name">report.profit.analysis.search</field>
+        <field name="model">report.profit.analysis</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="brand_id"/>
+                <field name="platform"/>
+                <filter string="有收入" name="filter_has_revenue" domain="[('revenue', '>', 0)]"/>
+                <filter string="亏损" name="filter_loss" domain="[('gross_profit', '&lt;', 0)]"/>
+                <group expand="0" string="分组">
+                    <filter string="期间" name="group_period" context="{'group_by': 'period:month'}"/>
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="平台" name="group_platform" context="{'group_by': 'platform'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 利润报表 Action -->
+    <record id="action_report_profit_analysis" model="ir.actions.act_window">
+        <field name="name">利润分析</field>
+        <field name="res_model">report.profit.analysis</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="search_view_id" ref="report_profit_analysis_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                暂无利润数据
+            </p>
+            <p>利润报表基于已确认的销售订单自动计算。</p>
+        </field>
+    </record>
+
+</odoo>

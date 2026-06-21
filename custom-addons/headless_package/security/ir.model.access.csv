@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_headless_package_user,headless.package.user,model_headless_package,base.group_user,1,1,1,0
+access_headless_package_manager,headless.package.manager,model_headless_package,stock.group_stock_manager,1,1,1,1
+access_headless_import_wizard_user,headless.import.wizard.user,model_headless_import_wizard,base.group_user,1,1,1,0

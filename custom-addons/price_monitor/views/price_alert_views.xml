@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 价格预警 Tree 视图 -->
+    <record id="price_alert_tree" model="ir.ui.view">
+        <field name="name">price.alert.tree</field>
+        <field name="model">price.alert</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="severity == 'high'" decoration-warning="severity == 'medium'">
+                <field name="alert_date"/>
+                <field name="name"/>
+                <field name="monitor_product_id"/>
+                <field name="alert_type"/>
+                <field name="severity"/>
+                <field name="state"/>
+                <field name="message"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 价格预警 Form 视图 -->
+    <record id="price_alert_form" model="ir.ui.view">
+        <field name="name">price.alert.form</field>
+        <field name="model">price.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_read" type="object" string="标记已读"
+                            invisible="state != 'new'" class="btn-primary"/>
+                    <button name="action_mark_processed" type="object" string="标记已处理"
+                            invisible="state != 'read'" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,read,processed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="monitor_product_id"/>
+                            <field name="alert_type"/>
+                        </group>
+                        <group>
+                            <field name="alert_date"/>
+                            <field name="severity"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="message"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 价格预警 Search 视图 -->
+    <record id="price_alert_search" model="ir.ui.view">
+        <field name="name">price.alert.search</field>
+        <field name="model">price.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="monitor_product_id"/>
+                <filter string="新预警" name="filter_new" domain="[('state', '=', 'new')]"/>
+                <filter string="已读" name="filter_read" domain="[('state', '=', 'read')]"/>
+                <filter string="已处理" name="filter_processed" domain="[('state', '=', 'processed')]"/>
+                <separator/>
+                <filter string="高严重度" name="filter_high" domain="[('severity', '=', 'high')]"/>
+                <group expand="0" string="分组">
+                    <filter string="状态" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="预警类型" name="group_type" context="{'group_by': 'alert_type'}"/>
+                    <filter string="严重程度" name="group_severity" context="{'group_by': 'severity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 价格预警 Action -->
+    <record id="action_price_alert" model="ir.actions.act_window">
+        <field name="name">价格预警</field>
+        <field name="res_model">price.alert</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="price_alert_search"/>
+        <field name="context">{'search_default_filter_new': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                暂无价格预警
+            </p>
+            <p>当监控到价格异常波动时将自动生成预警。</p>
+        </field>
+    </record>
+
+</odoo>

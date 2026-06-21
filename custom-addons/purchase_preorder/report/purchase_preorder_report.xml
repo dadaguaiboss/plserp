@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 期货履约跟踪表 Tree 视图 -->
+    <record id="purchase_preorder_futures_tracking_tree" model="ir.ui.view">
+        <field name="name">purchase.preorder.futures.tracking.tree</field>
+        <field name="model">purchase.preorder</field>
+        <field name="arch" type="xml">
+            <tree string="期货履约跟踪表" create="false" edit="false">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="partner_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="purchase_mode"/>
+                <field name="expected_date" decoration-danger="expected_date &lt; current_date and state != 'converted'"/>
+                <field name="target_platform"/>
+                <field name="amount_total" sum="合计"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state in ('approved', 'converted')" decoration-danger="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 期货履约跟踪表 Search 视图 -->
+    <record id="purchase_preorder_futures_tracking_search" model="ir.ui.view">
+        <field name="name">purchase.preorder.futures.tracking.search</field>
+        <field name="model">purchase.preorder</field>
+        <field name="arch" type="xml">
+            <search string="期货履约跟踪">
+                <field name="name"/>
+                <field name="brand_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="未到期" name="not_expired"
+                        domain="[('expected_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="已到期" name="expired"
+                        domain="[('expected_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="待履约" name="pending"
+                        domain="[('state', 'in', ('approved', 'converted'))]"/>
+                <group expand="0" string="分组">
+                    <filter string="品牌" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                    <filter string="采购员" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="目标平台" name="group_platform" context="{'group_by': 'target_platform'}"/>
+                    <filter string="预计到货月" name="group_expected_date" context="{'group_by': 'expected_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 期货履约跟踪表动作 -->
+    <record id="purchase_preorder_futures_tracking_action" model="ir.actions.act_window">
+        <field name="name">期货履约跟踪</field>
+        <field name="res_model">purchase.preorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="purchase_preorder_futures_tracking_tree"/>
+        <field name="search_view_id" ref="purchase_preorder_futures_tracking_search"/>
+        <field name="domain">[('order_type', '=', 'futures')]</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                暂无期货订单
+            </p>
+            <p>此处显示所有期货类型的预采订单，方便跟踪履约情况。</p>
+        </field>
+    </record>
+
+</odoo>

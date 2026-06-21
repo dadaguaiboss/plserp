@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 预采订单管理 根菜单 (在采购菜单下) -->
+    <menuitem id="menu_purchase_preorder_root"
+              name="预采管理"
+              parent="purchase.menu_purchase_root"
+              sequence="5"/>
+
+    <!-- 预采订单 子菜单 -->
+    <menuitem id="menu_purchase_preorder"
+              name="预采订单"
+              parent="menu_purchase_preorder_root"
+              action="purchase_preorder_action"
+              sequence="10"/>
+
+    <!-- 品牌管理 子菜单 -->
+    <menuitem id="menu_product_brand"
+              name="品牌管理"
+              parent="menu_purchase_preorder_root"
+              action="product_brand_action"
+              sequence="20"/>
+
+    <!-- 期货履约跟踪 子菜单 -->
+    <menuitem id="menu_futures_tracking"
+              name="期货履约跟踪"
+              parent="menu_purchase_preorder_root"
+              action="purchase_preorder_futures_tracking_action"
+              sequence="30"/>
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 报表中心 主菜单 -->
+    <menuitem id="menu_report_center_root"
+              name="报表中心"
+              sequence="80"
+              web_icon="report_center,static/description/icon.png"/>
+
+    <!-- 库存报表 -->
+    <menuitem id="menu_report_stock"
+              name="库存报表"
+              parent="menu_report_center_root"
+              sequence="10"/>
+
+    <menuitem id="menu_report_stock_summary"
+              name="库存总览"
+              parent="menu_report_stock"
+              action="action_report_stock_summary"
+              sequence="10"/>
+
+    <!-- 利润报表 -->
+    <menuitem id="menu_report_profit"
+              name="利润报表"
+              parent="menu_report_center_root"
+              sequence="20"/>
+
+    <menuitem id="menu_report_profit_analysis"
+              name="利润分析"
+              parent="menu_report_profit"
+              action="action_report_profit_analysis"
+              sequence="10"/>
+
+</odoo>
