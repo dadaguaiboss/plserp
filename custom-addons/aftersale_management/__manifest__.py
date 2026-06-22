@@ -15,7 +15,7 @@
 - 退货/换货/退款/补发全流程管理
     """,
     'author': '普洛狮科技',
-    'website': 'https://www.prolion-erp.com',
+    'website': 'https://www.pls-erp.com',
     'depends': ['sale', 'stock', 'product', 'mail'],
     'data': [
         'security/ir.model.access.csv',

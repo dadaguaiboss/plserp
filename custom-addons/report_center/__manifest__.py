@@ -9,7 +9,7 @@
         - 利润报表（收入、成本、毛利分析）
         - 集中式报表入口
     """,
-    'author': 'Prolion',
+    'author': 'PLS',
     'depends': ['base', 'purchase', 'sale', 'stock', 'account'],
     'data': [
         'security/ir.model.access.csv',

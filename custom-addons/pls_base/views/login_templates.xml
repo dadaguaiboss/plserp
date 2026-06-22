@@ -2,30 +2,30 @@
 <odoo>
 
     <!-- 定制登录页面 -->
-    <template id="prolion_login" inherit_id="web.login" name="ProLion Login Page">
+    <template id="pls_login" inherit_id="web.login" name="PLS Login Page">
         <!-- 在登录表单上方添加品牌标识 -->
         <xpath expr="//div[hasclass('card-body')]" position="before">
-            <div class="text-center mb-4 prolion-login-header">
-                <div class="prolion-logo-container">
-                    <img src="/prolion_base/static/src/img/logo.png"
+            <div class="text-center mb-4 pls-login-header">
+                <div class="pls-logo-container">
+                    <img src="/pls_base/static/src/img/logo.png"
                          alt="普洛狮ERP"
-                         class="prolion-login-logo"
+                         class="pls-login-logo"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                     />
-                    <h2 class="prolion-login-title" style="display:none;">普洛狮ERP</h2>
+                    <h2 class="pls-login-title" style="display:none;">普洛狮ERP</h2>
                 </div>
-                <h2 class="prolion-login-title">普洛狮ERP</h2>
-                <p class="prolion-login-subtitle">企业资源计划管理系统</p>
+                <h2 class="pls-login-title">普洛狮ERP</h2>
+                <p class="pls-login-subtitle">企业资源计划管理系统</p>
             </div>
         </xpath>
     </template>
 
     <!-- 定制登录页底部 -->
-    <template id="prolion_login_footer" inherit_id="web.login_layout" name="ProLion Login Footer">
+    <template id="pls_login_footer" inherit_id="web.login_layout" name="PLS Login Footer">
         <xpath expr="//div[hasclass('o_login_footer')]" position="replace">
             <div class="o_login_footer text-center mt-3">
                 <small class="text-muted">
-                    © 2026 普洛狮科技 | ProLion ERP v19.0
+                    © 2026 普洛狮科技 | PLS ERP v19.0
                 </small>
             </div>
         </xpath>

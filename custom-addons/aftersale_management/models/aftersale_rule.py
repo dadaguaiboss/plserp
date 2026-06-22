@@ -1,4 +1,4 @@
-# Part of ProLion ERP. See LICENSE file for full copyright and licensing details.
+# Part of PLS ERP. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
 from datetime import timedelta

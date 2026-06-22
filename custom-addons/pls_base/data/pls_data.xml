@@ -3,13 +3,13 @@
     <data noupdate="1">
 
         <!-- 系统参数：数据库过滤器 -->
-        <record id="prolion_db_filter" model="ir.config_parameter">
+        <record id="pls_db_filter" model="ir.config_parameter">
             <field name="key">web.base.url</field>
             <field name="value">http://localhost:31013</field>
         </record>
 
         <!-- 系统参数：系统名称 -->
-        <record id="prolion_system_name" model="ir.config_parameter">
+        <record id="pls_system_name" model="ir.config_parameter">
             <field name="key">web.base.url.freeze</field>
             <field name="value">True</field>
         </record>

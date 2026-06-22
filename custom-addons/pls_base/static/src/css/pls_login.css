@@ -17,17 +17,17 @@
 }
 
 /* 品牌标识区域 */
-.prolion-login-header {
+.pls-login-header {
     padding: 10px 0;
 }
 
-.prolion-login-logo {
+.pls-login-logo {
     max-height: 80px;
     max-width: 200px;
     margin-bottom: 10px;
 }
 
-.prolion-login-title {
+.pls-login-title {
     color: #714B67;
     font-weight: 700;
     font-size: 1.6rem;
@@ -35,7 +35,7 @@
     letter-spacing: 2px;
 }
 
-.prolion-login-subtitle {
+.pls-login-subtitle {
     color: #888;
     font-size: 0.9rem;
     margin-bottom: 0;

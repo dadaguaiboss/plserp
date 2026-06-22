@@ -10,7 +10,7 @@
         - 待付金额（自动计算）
         - 付款备注
     """,
-    'author': 'Prolion',
+    'author': 'PLS',
     'depends': ['purchase', 'account'],
     'data': [
         'security/ir.model.access.csv',

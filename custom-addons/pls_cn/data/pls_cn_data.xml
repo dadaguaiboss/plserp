@@ -3,8 +3,8 @@
     <data noupdate="1">
 
         <!-- 设置默认语言为中文 -->
-        <record id="prolion_cn_lang" model="ir.config_parameter">
-            <field name="key">prolion.default_language</field>
+        <record id="pls_cn_lang" model="ir.config_parameter">
+            <field name="key">pls.default_language</field>
             <field name="value">zh_CN</field>
         </record>
 

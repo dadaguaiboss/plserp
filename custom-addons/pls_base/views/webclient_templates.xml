@@ -2,21 +2,21 @@
 <odoo>
 
     <!-- 覆盖 Web 客户端标题 -->
-    <template id="prolion_webclient_title" inherit_id="web.webclient_bootstrap" name="ProLion Web Client Title">
+    <template id="pls_webclient_title" inherit_id="web.webclient_bootstrap" name="PLS Web Client Title">
         <xpath expr="//title" position="replace">
             <title>普洛狮ERP</title>
         </xpath>
     </template>
 
     <!-- 覆盖 Web 客户端 Favicon -->
-    <template id="prolion_favicon" inherit_id="web.layout" name="ProLion Favicon">
+    <template id="pls_favicon" inherit_id="web.layout" name="PLS Favicon">
         <xpath expr="//link[@rel='shortcut icon']" position="replace">
-            <link rel="shortcut icon" href="/prolion_base/static/src/img/favicon.ico" type="image/x-icon"/>
+            <link rel="shortcut icon" href="/pls_base/static/src/img/favicon.ico" type="image/x-icon"/>
         </xpath>
     </template>
 
     <!-- 覆盖页脚品牌信息 -->
-    <template id="prolion_brand_promotion" inherit_id="web.brand_promotion" name="ProLion Brand">
+    <template id="pls_brand_promotion" inherit_id="web.brand_promotion" name="PLS Brand">
         <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
             <div class="o_brand_promotion">
                 <a class="o_brand_promotion_link" target="_blank">

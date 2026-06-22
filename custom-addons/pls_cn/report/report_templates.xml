@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- 中文报表外部布局模板 -->
-    <template id="prolion_cn_external_layout" inherit_id="web.external_layout_standard" name="ProLion CN Report Layout">
+    <template id="pls_cn_external_layout" inherit_id="web.external_layout_standard" name="PLS CN Report Layout">
         <xpath expr="//div[@name='company_address']" position="after">
             <div t-if="company.unified_social_credit_code" class="mt-1">
                 <span>统一社会信用代码: </span>

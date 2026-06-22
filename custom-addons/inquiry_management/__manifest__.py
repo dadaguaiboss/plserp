@@ -14,7 +14,7 @@
 - 一键转预采订单
     """,
     'author': '普洛狮科技',
-    'website': 'https://www.prolion-erp.com',
+    'website': 'https://www.pls-erp.com',
     'license': 'LGPL-3',
     'depends': [
         'purchase',

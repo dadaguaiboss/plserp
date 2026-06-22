@@ -14,7 +14,7 @@
 - 中国地址格式适配
     """,
     'author': '普洛狮科技',
-    'website': 'https://www.prolion-erp.com',
+    'website': 'https://www.pls-erp.com',
     'depends': [
         'base',
         'account',
@@ -22,14 +22,14 @@
         'purchase',
         'stock',
         'l10n_cn',
-        'prolion_base',
+        'pls_base',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'report/report_templates.xml',
-        'data/prolion_cn_data.xml',
+        'data/pls_cn_data.xml',
     ],
     'installable': True,
     'auto_install': False,

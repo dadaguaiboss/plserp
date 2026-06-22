@@ -15,7 +15,7 @@
 - 关联售后单创建
     """,
     'author': '普洛狮科技',
-    'website': 'https://www.prolion-erp.com',
+    'website': 'https://www.pls-erp.com',
     'depends': ['stock', 'sale', 'mail', 'aftersale_management'],
     'data': [
         'security/ir.model.access.csv',

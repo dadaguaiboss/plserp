@@ -4,7 +4,7 @@
     'category': 'Hidden',
     'summary': '普洛狮ERP品牌定制与基础配置',
     'description': """
-普洛狮ERP (ProLion ERP) 品牌定制模块
+普洛狮ERP (PLS ERP) 品牌定制模块
 =====================================
 
 本模块实现以下定制:
@@ -15,20 +15,20 @@
 - 初始化公司信息和系统参数
     """,
     'author': '普洛狮科技',
-    'website': 'https://www.prolion-erp.com',
+    'website': 'https://www.pls-erp.com',
     'depends': ['web', 'base', 'mail', 'base_setup'],
     'data': [
         'views/webclient_templates.xml',
         'views/login_templates.xml',
-        'data/prolion_data.xml',
+        'data/pls_data.xml',
     ],
     'assets': {
         'web.assets_backend': [
-            'prolion_base/static/src/css/prolion_style.css',
-            'prolion_base/static/src/js/prolion.js',
+            'pls_base/static/src/css/pls_style.css',
+            'pls_base/static/src/js/pls.js',
         ],
         'web.assets_frontend': [
-            'prolion_base/static/src/css/prolion_login.css',
+            'pls_base/static/src/css/pls_login.css',
         ],
     },
     'installable': True,

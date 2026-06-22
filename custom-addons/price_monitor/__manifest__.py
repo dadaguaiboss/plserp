@@ -9,7 +9,7 @@
         - 价格波动预警
         - 价格趋势分析
     """,
-    'author': 'Prolion',
+    'author': 'PLS',
     'depends': ['product', 'mail'],
     'data': [
         'security/ir.model.access.csv',
